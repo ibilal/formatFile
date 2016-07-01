@@ -16,8 +16,6 @@ import sys
 #   ./formatFile.py input3.txt 202 f
 
 
-print('some change')
-
 
 #Constant values for command line argument length as well as
 #filename, exam, course argument indicies
@@ -44,8 +42,56 @@ PRIVATE_KEYWORD = 'Private Prototype'
 #Function to parse CS202 midterm/final questions to required format
 #with the specified exam as optional:
 def format202(filename, exam, lines):
-    print('some to come')
-    print('added something to print for CS202')
+    question_array = []
+    question_received_flag = False
+    public_prototype_flag = False
+    private_prototype_flag = False
+
+    question_text = ''
+    public_prototype_text = ''
+    private_prototype_text = ''
+
+    for line in lines:
+        if QUESTION in line or QUESTION2 in line:
+            if question_text != '' and public_prototype_text != '' and private_prototype_text != '':
+                question_array.append(question_text + '\npublic prototype: ' + public_prototype_text + '\nprivate prototype: ' + private_prototype_text)
+                question_text = line
+                private_prototype_text = ''
+                public_prototype_text = ''
+                public_prototype_flag = False
+                private_prototype_flag = False
+            else:
+                question_text = line
+
+        elif PUBLIC_KEYWORD in line or PRIVATE_KEYWORD in line:
+            continue
+        elif re.search(PROTOTYPE_REGX, line, 0):
+            if public_prototype_flag == False:
+                public_prototype_text += line;
+                public_prototype_flag = True
+            elif private_prototype_flag == False:
+                private_prototype_text += line;
+                private_prototype_flag = True
+            else:
+                print('Sorry, too many prototypes for [' + question_text + ']. Please reformat file.' )
+                sys.exit()
+        else:
+            question_text += ' ' + line
+    if question_text != '' and private_prototype_text != '' and public_prototype_text != '' and public_prototype_flag == True and private_prototype_flag == True:
+        if question_array.__len__() > 0:
+            question_array.append('\n')
+        question_array.append(question_text + '\npublic prototype: ' + public_prototype_text + '\nprivate prototype: ' + private_prototype_text)
+
+    results = ''
+    for element in question_array:
+        results += element
+    if (exam == ''):
+        outputFile = filename + '[FORMATTED].txt'
+    else:
+        exam = exam.lower()
+        outputFile = filename + '[FORMATTED-' + exam + '].txt'
+    output = open(outputFile, 'w')
+    output.writelines(results)
 
 
 #Function to parse CS163 midterm/final and CS162 final questions to required format
@@ -53,35 +99,32 @@ def format202(filename, exam, lines):
     # OPTIONAL: exam for CS 163 Midterm/Final Files
 def format163(filename, exam, lines):
     question_array = []
-    question = False
-    prototype = False
+    question_received_flag = False
+    prototype_received_flag = False
 
     question_text = ''
     prototype_text = ''
 
     for line in lines:
-       # print(line)
         if QUESTION in line or QUESTION2 in line:
-            if (question == True):
-                if(prototype == True):
-                    question_array.append(question_text + '\n' + prototype_text + '\n')
-                    question = False
-                    question_text = ''
-                    prototype_text = ''
-                    prototype = False
-                else:
-                    print('Sorry, file is formatted; question exists without prototype')
-                    exit()
-            question_text += line
-            question = True
+            if prototype_text != '':
+                question_array.append(question_text + '\n' + prototype_text + '\n')
+                question_text = ''
+                prototype_text = ''
+                prototype_received_flag = False
+
+            elif question_array.__len__() > 0:
+                print('Sorry, file is not formatted correctly for this course; question exists without prototype')
+                sys.exit()
+            question_text += ' ' + line
         elif re.search(PROTOTYPE_KEYWORD, line, 0):
             continue
         elif re.search(PROTOTYPE_REGX, line, 0):
             prototype_text = line
-            prototype = True
+            prototype_received_flag = True
         else:
-            question_text += line
-    if question_text != '' and prototype_text != '' and question == True and prototype == True:
+            question_text += ' ' + line
+    if question_text != '' and prototype_text != '' and prototype_received_flag == True:
         question_array.append(question_text + '\n' + prototype_text + '\n')
 
     results = ''
@@ -90,9 +133,10 @@ def format163(filename, exam, lines):
     if(exam == ''):
         outputFile = filename + '[FORMATTED].txt'
     else:
+        exam = exam.lower()
         outputFile = filename + '[FORMATTED-' + exam + '].txt'
-    output = open(outputFile, 'a')
-    output.write(results)
+    output = open(outputFile, 'w')
+    output.writelines(results)
 
 
 #Function takes a filename and an exam session to parse a CS 162 input textfile
@@ -104,10 +148,12 @@ def format162(filename, exam, lines):
         input = filename.split('.')
         results = ''
         for line in lines:
-            results += line + '\n'
-        outputFile = filename + '[FORMATTED-" + exam + "].txt'
-        output = open(outputFile, 'a')
-        output.write(results)
+            if results != '':
+                results += '\n'
+            results += line.replace('\n', '')
+        outputFile = filename + '[FORMATTED-' + exam + '].txt'
+        output = open(outputFile, 'w')
+        output.writelines(results)
 
 
     #else user has specified final for CS 162; in which case will be handled
@@ -146,12 +192,22 @@ if(arg_count == MAX_ARG_COUNT):
 else:
     exam = ''
 
+if exam != '' and exam not in ['M', 'm', 'F', 'f']:
+    print('Sorry, exam must be either midterm (M or m) or final (F or f)')
+    print('Example: \nTry:   ./formatFile.py input1.txt 162 m')
+    sys.exit()
+
 
 #open filename and parse all new lines out of input to be passed to format functions
 file = open(filename, 'r')
 filename = filename.split('.')
 filename = filename[0]
 lines = file.readlines()
+
+if lines.__len__() <= 0:
+    print('Input file to format was empty.')
+    sys.exit()
+
 parsed_lines = []
 for line in lines:
     line = line.replace('\n', '')
@@ -166,12 +222,15 @@ if course == '162':
     if arg_count < MAX_ARG_COUNT:
         print('Sorry, too few arguments to format file')
         print('\n(Try: ./formatFile ' + filename + ' ' + course + ' m/f')
+        sys.exit()
 
     elif exam not in ['M', 'm', 'F', 'f']:
         print('Sorry, please specify whether the file expected is Midterm (m) or Final (f)')
         print('\n(Try: ./formatFile ' + filename + ' ' + course + ' m/f')
+        sys.exit()
 
     else:
+        exam = exam.lower()
         format162(filename, exam, parsed_lines)
 
 
@@ -183,4 +242,9 @@ elif course == '163':
 #Else if course selected is 202: format according to the only format; exam argument is optional - not required
 elif course == '202':
     format202(filename, exam, parsed_lines)
+
+else:
+    print('Sorry, course is not 162, 163, or 202. The input files must be for one of these courses')
+    print('Example: \nTry:   ./formatFile.py input1.txt 162 m')
+    sys.exit()
 
