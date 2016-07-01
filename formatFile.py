@@ -16,6 +16,8 @@ import sys
 #   ./formatFile.py input3.txt 202 f
 
 
+print('some change')
+
 
 #Constant values for command line argument length as well as
 #filename, exam, course argument indicies
