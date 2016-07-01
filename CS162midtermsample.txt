@@ -1,9 +1,0 @@
-
-Write a C++ program to read in a word from the user, no longer than 20 characters. If the first and last 
-letters in the word are the same, ask the user to re-enter the word. Continue to do this until the letters 
-are different OR until the user has be given 3 chances.
-Write a C++ program to read in a word from the user, no longer than 20 characters. If the first and last 
-letters in the word are the same, ask the user to re-enter the word. Continue to do this until the letters 
-are different.
-
-
