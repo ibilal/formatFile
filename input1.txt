@@ -1,0 +1,30 @@
+Write a C++ recursive solution to determine if two binary search trees are identical. ENDING
+
+
+
+bool are_identical(node * root1, node * root2);
+
+*** ot contain the phrase
+smore lhskjdfh
+
+
+Write a function to delete all the leaves in a binary search tree. Return the number of nodes removed. ENDING
+int remove_all_leaves(node *& root);
+smore lhskjdfh
+smore lhskjdfh
+smore lhskjdfh
+smore lhskjdfh
+smore lhskjdfh
+smore lhskjdfh
+
+
+smore lhskjdfh
+smore lhskjdfh
+smore lhskjdfh
+smore lhskjdfh
+
+
+Write a C++ recursive solution to delete all the leaves in a binary search tree. Return the number of nodes removed. ENDING
+int remove_all_leaves(node *& root //didn't work here thoughs one though);
+
+
