@@ -45,6 +45,7 @@ PRIVATE_KEYWORD = 'Private Prototype'
 #with the specified exam as optional:
 def format202(filename, exam, lines):
     print('some to come')
+    print('added something to print for CS202')
 
 
 #Function to parse CS163 midterm/final and CS162 final questions to required format
