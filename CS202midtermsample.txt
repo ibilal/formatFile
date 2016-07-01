@@ -1,0 +1,16 @@
+Write a C++ recursive solution to create a copy of all even data items in an array of linear linked lists. Return the number of items copied over.
+
+Public Prototype:
+int make_new(table & copy);
+
+Private Prototype:
+int make_new(node ** & copy, node * source[]);
+
+Write a C++ recursive solution to move the first node in the first linked list to right before the LAST 2 encountered in the array of linear linked lists.  Minimize traversals. Return the number of times a 2 was encountered.
+
+Public Prototype:
+int move_to_last();
+
+Private Prototype:
+int move_to_last(node * head[]);
+

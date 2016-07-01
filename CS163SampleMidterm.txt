@@ -1,0 +1,15 @@
+Write a RECURSIVE C++ function to count the number of times a 2 exists in a circular 
+linked list. Return the new number of nodes in the list.  
+
+Prototype:
+    
+Int count(node * & rear);
+
+
+Write a RECURSIVE C++ function to add a node right BEFORE the last node (that rear 
+points to) in a circular linked list. Return the number of nodes in the list.  
+
+Prototype:
+
+int add_before_last(node * & rear);
+
