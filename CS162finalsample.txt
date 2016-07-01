@@ -1,7 +1,0 @@
-Write a C++ solution to count the number of nodes containing a data item that is a multiple or 3 or 5 in a linear linked list. Return the count. Display your results from main. The data in the list is an integer.
-int count_multiples(node * head);
-
-
-Write a C++ solution to remove the node before the last 2 in a linear linked list. Add this node to the end of the list. Return the data in this node that has been removed and added. The data in the list is an integer.
-int remove_before_last_2(node *& head);
-
