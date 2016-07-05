@@ -43,7 +43,7 @@ PRIVATE_KEYWORD = 'Private Prototype'
 
 #Function to parse CS202 midterm/final questions to required format
 #with the specified exam as optional:
-def format202(filename, exam, lines):
+def format202(filename, lines):
     question_array = []
     public_prototype_flag = False
     private_prototype_flag = False
@@ -86,11 +86,7 @@ def format202(filename, exam, lines):
     results = ''
     for element in question_array:
         results += element
-    if (exam == ''):
-        outputFile = filename + 'FORMATTED.txt'
-    else:
-        exam = exam.lower()
-        outputFile = filename + 'FORMATTED.txt'
+    outputFile = filename + 'FORMATTED.txt'
     output = open(outputFile, 'w')
     output.writelines(results)
 
@@ -98,7 +94,7 @@ def format202(filename, exam, lines):
 #Function to parse CS163 midterm/final and CS162 final questions to required format
     # REQUIRED: exam for CS 162 Final Files
     # OPTIONAL: exam for CS 163 Midterm/Final Files
-def format163(filename, exam, lines):
+def format163(filename, lines):
     question_array = []
     prototype_received_flag = False
 
@@ -130,11 +126,7 @@ def format163(filename, exam, lines):
     results = ''
     for element in question_array:
         results += element
-    if(exam == ''):
-        outputFile = filename + 'FORMATTED.txt'
-    else:
-        exam = exam.lower()
-        outputFile = filename + 'FORMATTED.txt'
+    outputFile = filename + 'FORMATTED.txt'
     output = open(outputFile, 'w')
     output.writelines(results)
 
@@ -159,7 +151,7 @@ def format162(filename, exam, lines):
     #else user has specified final for CS 162; in which case will be handled
     # same as CS 163 midterm/final files
     else:
-        format163(filename, exam, lines)
+        format163(filename, lines)
 
 
 
@@ -247,12 +239,12 @@ if course == '162':
 
 #Else if course selected is 163: format according to the only format; exam argument is optional - not required
 elif course == '163':
-    format163(filename, exam, parsed_lines)
+    format163(filename, parsed_lines)
 
 
 #Else if course selected is 202: format according to the only format; exam argument is optional - not required
 elif course == '202':
-    format202(filename, exam, parsed_lines)
+    format202(filename, parsed_lines)
 
 else:
     print('Sorry, course is not 162, 163, or 202. The input files must be for one of these courses')
