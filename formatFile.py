@@ -1,5 +1,7 @@
+#!/usr/bin/env python
 import re
 import sys
+
 
 
 #To run program:
@@ -43,7 +45,6 @@ PRIVATE_KEYWORD = 'Private Prototype'
 #with the specified exam as optional:
 def format202(filename, exam, lines):
     question_array = []
-    question_received_flag = False
     public_prototype_flag = False
     private_prototype_flag = False
 
@@ -54,7 +55,7 @@ def format202(filename, exam, lines):
     for line in lines:
         if QUESTION in line or QUESTION2 in line:
             if question_text != '' and public_prototype_text != '' and private_prototype_text != '':
-                question_array.append(question_text + '\npublic prototype: ' + public_prototype_text + '\nprivate prototype: ' + private_prototype_text)
+                question_array.append(question_text + '\n' + public_prototype_text + ':' + private_prototype_text + '\n')
                 question_text = line
                 private_prototype_text = ''
                 public_prototype_text = ''
@@ -80,16 +81,16 @@ def format202(filename, exam, lines):
     if question_text != '' and private_prototype_text != '' and public_prototype_text != '' and public_prototype_flag == True and private_prototype_flag == True:
         if question_array.__len__() > 0:
             question_array.append('\n')
-        question_array.append(question_text + '\npublic prototype: ' + public_prototype_text + '\nprivate prototype: ' + private_prototype_text)
+        question_array.append(question_text + '\n' + public_prototype_text + ':' + private_prototype_text + '\n')
 
     results = ''
     for element in question_array:
         results += element
     if (exam == ''):
-        outputFile = filename + '[FORMATTED].txt'
+        outputFile = filename + 'FORMATTED.txt'
     else:
         exam = exam.lower()
-        outputFile = filename + '[FORMATTED-' + exam + '].txt'
+        outputFile = filename + 'FORMATTED.txt'
     output = open(outputFile, 'w')
     output.writelines(results)
 
@@ -99,7 +100,6 @@ def format202(filename, exam, lines):
     # OPTIONAL: exam for CS 163 Midterm/Final Files
 def format163(filename, exam, lines):
     question_array = []
-    question_received_flag = False
     prototype_received_flag = False
 
     question_text = ''
@@ -131,10 +131,10 @@ def format163(filename, exam, lines):
     for element in question_array:
         results += element
     if(exam == ''):
-        outputFile = filename + '[FORMATTED].txt'
+        outputFile = filename + 'FORMATTED.txt'
     else:
         exam = exam.lower()
-        outputFile = filename + '[FORMATTED-' + exam + '].txt'
+        outputFile = filename + 'FORMATTED.txt'
     output = open(outputFile, 'w')
     output.writelines(results)
 
@@ -151,7 +151,7 @@ def format162(filename, exam, lines):
             if results != '':
                 results += '\n'
             results += line.replace('\n', '')
-        outputFile = filename + '[FORMATTED-' + exam + '].txt'
+        outputFile = filename + 'FORMATTED.txt'
         output = open(outputFile, 'w')
         output.writelines(results)
 
@@ -168,19 +168,21 @@ def format162(filename, exam, lines):
 ### Entry Point ###
 
 
+
+
 #Check argument length for given course:
 
 arg_count = len(sys.argv)
 
 #Too many arguments; throw error
 if(arg_count > MAX_ARG_COUNT):
-    print('Sorry, too many arguments to format file')
+    print('Sorry, too many arguments to format file. At most, there can only be three arguments after ./formatFile.py')
     exit()
 
 
 #Too few arguments; throw error
 if(arg_count < MIN_ARG_COUNT):
-    print('Sorry, too few arguments to format file')
+    print('Sorry, too few arguments to format file. There needs to be at least two arguments after ./formatFile.py')
     exit()
 
 
@@ -199,10 +201,19 @@ if exam != '' and exam not in ['M', 'm', 'F', 'f']:
 
 
 #open filename and parse all new lines out of input to be passed to format functions
-file = open(filename, 'r')
+try:
+    file = open(filename, 'r')
+    lines = file.readlines()
+except IOError as e:
+    print('Sorry, file ' + filename + ' does not exist. Please try again.')
+    exit()
+except:
+    print('Unexpected error: ' +  sys.exec_info()[0])
+    exit()
+
 filename = filename.split('.')
 filename = filename[0]
-lines = file.readlines()
+
 
 if lines.__len__() <= 0:
     print('Input file to format was empty.')
@@ -221,12 +232,12 @@ for line in lines:
 if course == '162':
     if arg_count < MAX_ARG_COUNT:
         print('Sorry, too few arguments to format file')
-        print('\n(Try: ./formatFile ' + filename + ' ' + course + ' m/f')
+        print('\n(Try: ./formatFile.py ' + filename + ' ' + course + ' m/f')
         sys.exit()
 
     elif exam not in ['M', 'm', 'F', 'f']:
         print('Sorry, please specify whether the file expected is Midterm (m) or Final (f)')
-        print('\n(Try: ./formatFile ' + filename + ' ' + course + ' m/f')
+        print('\n(Try: ./formatFile.py ' + filename + ' ' + course + ' m/f')
         sys.exit()
 
     else:
